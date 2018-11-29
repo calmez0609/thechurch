@@ -32,8 +32,8 @@ def callback():
 
 # 處理訊息
 def function(text):
-    list=['路二四26:基督受這些害，又進入祂的榮耀，豈不是應當的麼?','約七39:耶穌這話是指着信入祂的人將要受的那靈說的；那時還沒有那靈，因爲耶穌尚未得酌着榮耀。']
-    if text=='經結':
+    list=['畜生','王八蛋','龜孫']
+    if text=='隆基是':
         text=random.choice(list)
     return text
     
@@ -41,6 +41,7 @@ def function(text):
 def handle_message(event):
     message = TextSendMessage(function(event.message.text))
     line_bot_api.reply_message(event.reply_token, message)
+
 
 import os
 if __name__ == "__main__":
