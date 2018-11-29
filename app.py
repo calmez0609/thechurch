@@ -31,14 +31,16 @@ def callback():
     return 'OK'
 
 # 處理訊息
+def function(text):
+    list=['畜生','王八蛋','龜孫']
+    if text=='隆基是':
+        text=random.choice(list)
+    return text
+    
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    message = TextSendMessage(text = Reply(event.message.text))
+    message = TextSendMessage(function(event.message.text))
     line_bot_api.reply_message(event.reply_token, message)
-
-def Reply(text):
-    if text == "hi" :
-        return 'hello'
 
 import os
 if __name__ == "__main__":
