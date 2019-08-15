@@ -40,7 +40,7 @@ def function(text):
     elif text=='喔主耶穌' or '喔～主耶穌':
         text='阿們，哈雷路亞!'
     elif text=='時間':
-        text=datetime.date.today().str()
+        text=time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
     else:
         text=''
     return text
