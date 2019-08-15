@@ -40,7 +40,7 @@ def function(text):
     elif text=='喔主耶穌' or '喔～主耶穌':
         text='阿們，哈雷路亞!'
     elif text=='時間':
-today = datetime.date.today().strftime("%Y%m%d")
+        today = datetime.date.today().strftime("%Y%m%d")
         response = line_bot_api.get_insight_message_delivery(today)
         text=''+str(response)
     else:
