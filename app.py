@@ -41,7 +41,7 @@ def function(text):
         text='阿們，哈雷路亞!'
     elif text=='時間':
         text=datetime.date.today().str()
-    elif text=='':
+    else:
         text=''
     return text
     
