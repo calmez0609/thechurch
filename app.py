@@ -37,7 +37,9 @@ def function(text):
     if text=='經節':
         text=random.choice(list)
     elif text=='喔主耶穌' or '喔～主耶穌:
-        text='阿們，哈雷路亞!'+time.localtime().str()
+        text='阿們，哈雷路亞!
+    elif text=='時間':
+        text=time.localtime().str()
     return text
     
 @handler.add(MessageEvent, message=TextMessage)
