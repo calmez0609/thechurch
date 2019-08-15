@@ -1,5 +1,6 @@
 from flask import Flask, request, abort
 import random
+import time
 from linebot import (
     LineBotApi, WebhookHandler
 )
@@ -36,7 +37,7 @@ def function(text):
     if text=='經節':
         text=random.choice(list)
     elif text=='喔主耶穌' or '喔～主耶穌:
-        text='阿們，哈雷路亞!'
+        text='阿們，哈雷路亞!'+time.localtime().str()
     return text
     
 @handler.add(MessageEvent, message=TextMessage)
