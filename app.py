@@ -9,6 +9,7 @@ from linebot.exceptions import (
     InvalidSignatureError
 )
 from linebot.models import *
+from time import gmtime, strftime
 
 app = Flask(__name__)
 
@@ -39,8 +40,8 @@ def function(text):
         text=random.choice(list)
     elif text=='喔～主耶穌':
         text='阿們，哈雷路亞!'
-    else:
-        text=''
+    elif text=='時間':
+        text=strftime("%Y-%m-%d %H:%M:%S", gmtime())
     return text
     
 @handler.add(MessageEvent, message=TextMessage)
