@@ -41,7 +41,7 @@ def function(text):
     elif text=='喔～主耶穌':
         text='阿們，哈雷路亞!梁隆基在'+strftime("%Y-%m-%d %H:%M:%S", gmtime())+'已讀並回覆喔主耶穌'
     elif text=='時間':
-        text=strftime("%Y-%m-%d %H:%M:%S", gmtime())+
+        text=strftime("%Y-%m-%d %H:%M:%S", gmtime())
     return text
     
 @handler.add(MessageEvent, message=TextMessage)
