@@ -11,16 +11,10 @@
 #  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #  License for the specific language governing permissions and limitations
 #  under the License.
-
-from __future__ import unicode_literals
-
-import os
-import sys
-from argparse import ArgumentParser
-
 from flask import Flask, request, abort
+
 from linebot import (
-    LineBotApi, WebhookParser
+    LineBotApi, WebhookHandler
 )
 from linebot.exceptions import (
     InvalidSignatureError
@@ -31,55 +25,38 @@ from linebot.models import (
 
 app = Flask(__name__)
 
-# get channel_secret and channel_access_token from your environment variable
-channel_secret = os.getenv('fcd25fa436e9474a1213390b2e674ce3', None)
-channel_access_token = os.getenv('V8J6CcKNRsHZF9pVXzV02sTJ8pYQlU1B3kcXZZ1y9dlP4/QvNf2nWtwsyFLmrSTEgcgsV8Hn4W1RaGjkdQtrhWZK/QemcOwEHCK31GDj4mpkICb8OW5HRlZ3wYzXWWdJYz+Zb+mGxj9yDZW8N5tb4QdB04t89/1O/w1cDnyilFU=', None)
-if channel_secret is None:
-    print('Specify LINE_CHANNEL_SECRET as environment variable.')
-    sys.exit(1)
-if channel_access_token is None:
-    print('Specify LINE_CHANNEL_ACCESS_TOKEN as environment variable.')
-    sys.exit(1)
-
-line_bot_api = LineBotApi(channel_access_token)
-parser = WebhookParser(channel_secret)
+line_bot_api = LineBotApi('V8J6CcKNRsHZF9pVXzV02sTJ8pYQlU1B3kcXZZ1y9dlP4/QvNf2nWtwsyFLmrSTEgcgsV8Hn4W1RaGjkdQtrhWZK/QemcOwEHCK31GDj4mpkICb8OW5HRlZ3wYzXWWdJYz+Zb+mGxj9yDZW8N5tb4QdB04t89/1O/w1cDnyilFU=')
+handler = WebhookHandler('fcd25fa436e9474a1213390b2e674ce3')
 
 
 @app.route("/callback", methods=['POST'])
 def callback():
+    # get X-Line-Signature header value
     signature = request.headers['X-Line-Signature']
 
     # get request body as text
     body = request.get_data(as_text=True)
     app.logger.info("Request body: " + body)
 
-    # parse webhook body
+    # handle webhook body
     try:
-        events = parser.parse(body, signature)
+        handler.handle(body, signature)
     except InvalidSignatureError:
+        print("Invalid signature. Please check your channel access token/channel secret.")
         abort(400)
-
-    # if event is MessageEvent and message is TextMessage, then echo text
-    for event in events:
-        if not isinstance(event, MessageEvent):
-            continue
-        if not isinstance(event.message, TextMessage):
-            continue
-
-        line_bot_api.reply_message(
-            event.reply_token,
-            TextSendMessage(text=event.message.text)
-        )
 
     return 'OK'
 
 
-if __name__ == "__main__":
-    arg_parser = ArgumentParser(
-        usage='Usage: python ' + __file__ + ' [--port <port>] [--help]'
-    )
-    arg_parser.add_argument('-p', '--port', type=int, default=8000, help='port')
-    arg_parser.add_argument('-d', '--debug', default=False, help='debug')
-    options = arg_parser.parse_args()
+@handler.add(MessageEvent, message=TextMessage)
+def handle_message(event):
+    line_bot_api.reply_message(
+        event.reply_token,
+        TextSendMessage(text=event.message.text))
 
-    app.run(debug=options.debug, port=options.port)
+
+if __name__ == "__main__":
+    app.run()
+
+
+    
